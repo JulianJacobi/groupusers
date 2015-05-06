@@ -111,8 +111,7 @@ class syntax_plugin_groupusers extends DokuWiki_Syntax_Plugin {
                 $renderer->doc .= '</tr>';
             }
             $renderer->doc .= '</table>';
-            $renderer->doc .= "Email an alle:<br>"; //thorsten@th-petersen.de ergänzt#
-            $renderer->emaillink($PetMail); //thorsten@th-petersen.de ergänzt
+            $renderer->emaillink($PetMail, "Mail an alle"); //thorsten@th-petersen.de ergänzt
             $PetMail = ''; //important for multiple use (moz@e.mail.de)
             return true;
         }
