@@ -20,12 +20,12 @@ class syntax_plugin_groupusers extends DokuWiki_Syntax_Plugin {
      */
     function getInfo(){
         return array(
-            'author' => 'Dominik Eckelmann',
-            'email'  => 'dokuwiki@cosmocode.de',
-            'date'   => '2009-07-09',
+            'author' => 'Dominik Eckelmann, Julian Jacobi',
+            'email'  => 'julian.jacobi@tu-bs.de',
+            'date'   => '2015-05-06',
             'name'   => 'Groupusers Syntax plugin',
             'desc'   => 'Displays the users from one or more groups.',
-            'url'    => 'http://www.dokuwiki.org/plugin:groupusers'
+            'url'    => ''
         );
     }
 
@@ -73,7 +73,8 @@ class syntax_plugin_groupusers extends DokuWiki_Syntax_Plugin {
     function render($mode, &$renderer, $data) {
         global $auth;
         global $lang;
-
+		global $PetMail; //thorsten@th-petersen.de ergänzt
+ 
         if (!method_exists($auth,"retrieveUsers")) return false;
         if($mode == 'xhtml'){
             $users = array();
@@ -85,28 +86,34 @@ class syntax_plugin_groupusers extends DokuWiki_Syntax_Plugin {
             $renderer->doc .= '<tr>';
             $renderer->doc .= '<th>'.$lang['user'].'</th>';
             $renderer->doc .= '<th>'.$lang['fullname'].'</th>';
-            
+ 
             if (!in_array('nomail', $data))
 			{
 				$renderer->doc .= '<th>'.$lang['email'].'</th>';
 			}
-
+ 
             $renderer->doc .= '</tr>';
             foreach ($users as $user => $info) {
                 $renderer->doc .= '<tr>';
-                $renderer->doc .= '<td>'.htmlspecialchars($user).'</td>';
+				$renderer->doc .= '<td>'; //thorsten@th-petersen.de ergänzt
+                $renderer->internallink($user); ////thorsten@th-petersen.de Original: $renderer->doc .= '<td>'.htmlspecialchars($user).'</td>';
+				$renderer->doc .= '</td>'; //thorsten@th-petersen.de ergänzt
                 $renderer->doc .= '<td>'.hsc($info['name']).'</td>';
-
+ 
                 if (!in_array('nomail', $data))
 				{
                     $renderer->doc .= '<td>';
 					$renderer->emaillink($info['mail']);
                     $renderer->doc .= '</td>';
+					$PetMail.=$info['mail'].';'; //thorsten@th-petersen.de ergänzt
 				}
-
+ 
                 $renderer->doc .= '</tr>';
             }
             $renderer->doc .= '</table>';
+            $renderer->doc .= "Email an alle:<br>"; //thorsten@th-petersen.de ergänzt#
+            $renderer->emaillink($PetMail); //thorsten@th-petersen.de ergänzt
+            $PetMail = ''; //important for multiple use (moz@e.mail.de)
             return true;
         }
         return false;
