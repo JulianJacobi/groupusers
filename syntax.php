@@ -78,17 +78,10 @@ class syntax_plugin_groupusers extends DokuWiki_Syntax_Plugin {
         if (!method_exists($auth,"retrieveUsers")) return false;
         if($mode == 'xhtml'){
 	    $users = array();
-	    $is_member = false; //LAN Party Orga option
             foreach ($data[0] as $grp) {
                 $getuser = $auth->retrieveUsers(0,-1,array('grps'=>'^'.preg_quote($grp,'/').'$'));
 		$users = array_merge($users,$getuser);
-		if($grp == 'member'){
-			$is_member = true;
-		}
-	    }
-	    if ($is_member) {
-	    	$renderer->doc .= 'Teilnehmerzahl: '.length($users);
-	    }
+	    } 
             $renderer->doc .= $match.'<table class="inline">';
             $renderer->doc .= '<tr>';
             $renderer->doc .= '<th>'.$lang['user'].'</th>';
